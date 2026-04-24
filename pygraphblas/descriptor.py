@@ -54,95 +54,37 @@ class Descriptor:
     __slots__ = ("field", "value", "_desc", "token", "name")
 
     def __init__(self, desc=None, name=None):
-        self._desc = ffi.new("GrB_Descriptor*")
-        if desc is None:
-            _check(lib.GrB_Descriptor_new(self._desc))
-        else:
-            self._desc[0] = desc
-
-        self.token = None
-        self.name = name
+        raise NotImplementedError
 
     def get_desc(self):
-        return self._desc[0]
+        raise NotImplementedError
 
     def __enter__(self):
-        self.token = current_desc.set(self)
-        return self
+        raise NotImplementedError
 
     def __exit__(self, *errors):
-        current_desc.reset(self.token)
+        raise NotImplementedError
 
     def __del__(self):
-        if lib is not None:  # pragma: no cover
-            _check(lib.GrB_Descriptor_free(self._desc))
+        raise NotImplementedError
 
     def __and__(self, other):
-        default = lib.GxB_DEFAULT
-        d = Descriptor(name=self.name + other.name)
-        _check(lib.GrB_Descriptor_new(d._desc))
-        for f in (
-            lib.GrB_INP0,
-            lib.GrB_INP1,
-            lib.GrB_MASK,
-            lib.GrB_OUTP,
-            lib.GxB_DESCRIPTOR_NTHREADS,
-            lib.GxB_DESCRIPTOR_CHUNK,
-            lib.GxB_AxB_METHOD,
-            lib.GxB_SORT,
-        ):
-            s = self[f]
-            if s != default:
-                d[f] = s
-
-            o = other[f]
-            if o != default:
-                d[f] = o
-        return d
+        raise NotImplementedError
 
     def __setitem__(self, field, value):
-        _check(lib.GrB_Descriptor_set(self._desc[0], field, value))
+        raise NotImplementedError
 
     def __getitem__(self, field):
-        val = ffi.new("GrB_Desc_Value*")
-        _check(lib.GxB_Desc_get(self._desc[0], field, val))
-        return val[0]
+        raise NotImplementedError
 
     def __eq__(self, other):
-        for f in (
-            lib.GrB_INP0,
-            lib.GrB_INP1,
-            lib.GrB_MASK,
-            lib.GrB_OUTP,
-            lib.GxB_DESCRIPTOR_NTHREADS,
-            lib.GxB_DESCRIPTOR_CHUNK,
-            lib.GxB_AxB_METHOD,
-            lib.GxB_SORT,
-        ):
-            if self[f] != other[f]:
-                return False
-        return True
+        raise NotImplementedError
 
     def __contains__(self, other):
-        default = lib.GxB_DEFAULT
-        for f in (
-            lib.GrB_INP0,
-            lib.GrB_INP1,
-            lib.GrB_MASK,
-            lib.GrB_OUTP,
-            lib.GxB_DESCRIPTOR_NTHREADS,
-            lib.GxB_DESCRIPTOR_CHUNK,
-            lib.GxB_AxB_METHOD,
-            lib.GxB_SORT,
-        ):
-            s = self[f]
-            o = other[f]
-            if (s != default and o != default) and (s == o):
-                return True
-        return True
+        raise NotImplementedError
 
     def __repr__(self):
-        return f"<Descriptor {self.name}>"
+        raise NotImplementedError
 
 
 Default = Descriptor(ffi.NULL, "Default")

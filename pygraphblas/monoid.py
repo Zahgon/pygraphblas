@@ -39,30 +39,19 @@ class Monoid:
     __slots__ = ("name", "monoid", "token", "op", "type")
 
     def __init__(self, op, typ, monoid, udt=None, boolean=False):
-        self.monoid = monoid
-        cls = getattr(types, typ, None)
-        if cls is not None:
-            setattr(cls, op + "_MONOID", self)
-            setattr(cls, op.lower() + "_monoid", self)
-            types.__pdoc__[f"{typ}.{op}_MONOID"] = f"UnaryOp {typ}.{op}_MONOID"
-        self.op = op
-        self.type = typ
-        self.name = "_".join((op, typ, "monoid"))
-        self.token = None
+        raise NotImplementedError
 
     def __enter__(self):
-        self.token = current_monoid.set(self)
-        return self
+        raise NotImplementedError
 
     def __exit__(self, *errors):
-        current_monoid.reset(self.token)
-        return False
+        raise NotImplementedError
 
     def __call__(self, A, B, *args, **kwargs):
-        return A.eadd(B, self, *args, **kwargs)
+        raise NotImplementedError
 
     def get_op(self):
-        return self.monoid
+        raise NotImplementedError
 
     def print(self, level=2, name="", f=sys.stdout):  # pragma: nocover
         """Print the matrix using `GxB_Matrix_fprint()`, by default to
@@ -75,7 +64,7 @@ class Monoid:
         Level 5: Long list, long numbers
 
         """
-        _check(lib.GxB_Monoid_fprint(self.monoid, bytes(name, "utf8"), level, f))
+        pass
 
 
 gxb_monoid_re = re.compile(
@@ -93,28 +82,8 @@ pure_bool_re_v13 = re.compile("^GrB_(LOR|LAND|LXOR|LXNOR)_MONOID_(BOOL)$")
 
 
 def monoid_group(reg):
-    srs = []
-    for n in filter(None, [reg.match(i) for i in dir(lib)]):
-        op, typ = n.groups()
-        m = Monoid(op, typ, getattr(lib, n.string))
-        srs.append(m)
-    return srs
+    raise NotImplementedError
 
 
 def build_monoids(__pdoc__):
-    import tempfile
-
-    this = sys.modules[__name__]
-    for r in chain(
-        monoid_group(gxb_monoid_re),
-        monoid_group(grb_monoid_re),
-        monoid_group(pure_bool_re),
-        monoid_group(pure_bool_re_v13),
-    ):
-        setattr(this, r.name, r)
-        f = tempfile.TemporaryFile()
-        r.print(f=f)
-        f.seek(0)
-        this.__all__.append(r.name)
-        op, typ, _ = r.name.split("_")
-        __pdoc__[f"{typ}.{op}_MONOID"] = f"""```{str(f.read(), 'utf8')}```"""
+    raise NotImplementedError

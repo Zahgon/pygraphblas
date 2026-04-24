@@ -31,44 +31,23 @@ class Semiring:
     __slots__ = ("name", "semiring", "token", "pls", "mul", "type")
 
     def __init__(self, pls, mul, typ, semiring, udt=None):
-        self.pls = pls
-        self.mul = mul
-        self.type = typ
-        self.name = "_".join((pls, mul, typ))
-        self.semiring = semiring
-        self.token = None
-        name = pls + "_" + mul
-        if udt is None:
-            cls = getattr(types, typ)
-            setattr(cls, name, self)
-            setattr(cls, name.lower(), self)
-            types.__pdoc__[f"{typ}.{pls}_{mul}"] = f"UnaryOp {typ}.{pls}_{mul}"
+        raise NotImplementedError
 
     def __call__(self, A, B, *args, **kwargs):
-        from .vector import Vector
-
-        if isinstance(A, Vector):
-            op = A.vxm
-        elif isinstance(B, Vector):
-            op = A.mxv
-        else:
-            op = A.mxm
-        return op(B, self, *args, **kwargs)
+        raise NotImplementedError
 
     def __enter__(self):
-        self.token = current_semiring.set(self)
-        return self
+        raise NotImplementedError
 
     def __exit__(self, exception_type, exception_value, traceback):
-        current_semiring.reset(self.token)
-        return False
+        raise NotImplementedError
 
     def get_op(self):
-        return self.semiring
+        raise NotImplementedError
 
     @property
     def ztype(self):
-        return types.get_semiring_ztype(self.semiring)
+        pass
 
     def print(self, level=2, name="", f=sys.stdout):  # pragma: nocover
         """Print the matrix using `GxB_Matrix_fprint()`, by default to
@@ -81,7 +60,7 @@ class Semiring:
         Level 5: Long list, long numbers
 
         """
-        _check(lib.GxB_Semiring_fprint(self.semiring, bytes(name, "utf8"), level, f))
+        pass
 
 
 non_boolean_re = re.compile(
@@ -122,49 +101,12 @@ bitwise_re = re.compile(
 
 
 def semiring_group(reg):
-    srs = []
-    for n in filter(None, [reg.match(i) for i in dir(lib)]):
-        prefix, pls, mul, typ = n.groups()
-        srs.append(Semiring(pls, mul, typ, getattr(lib, n.string)))
-    return srs
+    raise NotImplementedError
 
 
 def semiring_template(r):  # pragma: nocover
-    from .matrix import Matrix
-
-    if r.ztype in (types.FC32, types.FC64):
-        return f"Semiring {r.name}"
-    A = Matrix.from_lists([0, 0, 1, 1], [0, 1, 0, 1], [1, 0, 1, 0])
-    B = A.dup()
-    if r.ztype is types.BOOL:
-        A = A.pattern()
-        B = B.pattern()
-    C = A.mxm(B, semiring=r)
-    return f"""\
-Semiring {r.name}
-
-<table>
-<tr>
-<td>{A.to_html_table('A')}</td><td> {B.to_html_table('B')}</td><td> {C.to_html_table('A @ B')}</td>
-</tr>
-</table>
-"""
+    pass
 
 
 def build_semirings(__pdoc__):
-    import tempfile
-
-    this = sys.modules[__name__]
-    for r in chain(
-        semiring_group(non_boolean_re),
-        semiring_group(boolean_re),
-        semiring_group(pure_bool_re),
-        semiring_group(bitwise_re),
-        semiring_group(complex_re),
-    ):
-        setattr(this, r.name, r)
-        pls, mul, typ = r.name.split("_")
-        f = tempfile.TemporaryFile()
-        r.print(f=f)
-        f.seek(0)
-        __pdoc__[f"{typ}.{pls}_{mul}"] = f"""```{str(f.read(), 'utf8')}```"""
+    raise NotImplementedError

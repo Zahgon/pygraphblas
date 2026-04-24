@@ -244,47 +244,23 @@ information](http://faculty.cse.tamu.edu/davis/news.html) can provide
 you with a lot more background information.
 
 """
-
 from suitesparse_graphblas import lib, ffi, initialize, is_initialized
 
-
 def init(blocking=False):
-    initialize(blocking=blocking, memory_manager="c")
-
-
-if not is_initialized():  # pragma: nocover
+    raise NotImplementedError()
+if not is_initialized():
     init()
-
-from .base import (
-    lib,
-    ffi,
-    GxB_INDEX_MAX,
-    GxB_IMPLEMENTATION,
-    GxB_SPEC,
-    options_get,
-    options_set,
-)
-
-
+from .base import lib, ffi, GxB_INDEX_MAX, GxB_IMPLEMENTATION, GxB_SPEC, options_get, options_set
 IMPLEMENTATION_MAJOR = lib.GxB_IMPLEMENTATION_MAJOR
 IMPLEMENTATION_MINOR = lib.GxB_IMPLEMENTATION_MINOR
 IMPLEMENTATION_SUB = lib.GxB_IMPLEMENTATION_SUB
-IMPLEMENTATION_VERSION = (
-    IMPLEMENTATION_MAJOR,
-    IMPLEMENTATION_MINOR,
-    IMPLEMENTATION_SUB,
-)
-
+IMPLEMENTATION_VERSION = (IMPLEMENTATION_MAJOR, IMPLEMENTATION_MINOR, IMPLEMENTATION_SUB)
 from . import _version
+__version__ = _version.get_versions()['version']
 
-__version__ = _version.get_versions()["version"]
-
-
-def get_version():  # pragma: nocover
+def get_version():
     """Return the pygraphblas version."""
-    return __version__
-
-
+    pass
 from .semiring import build_semirings
 from .binaryop import build_binaryops, Accum, binary_op
 from .unaryop import build_unaryops, unary_op
@@ -294,110 +270,22 @@ from .matrix import Matrix
 from .vector import Vector
 from .scalar import Scalar
 from . import descriptor
-
-__pdoc__ = {
-    "base": False,
-    "build": False,
-    "unaryop": False,
-    "binaryop": False,
-    "monoid": False,
-    "semiring": False,
-    "matrix": False,
-    "vector": False,
-    "scalar": False,
-    "types": False,
-    "run_doctests": False,
-    "descriptor": True,
-    "selectop": True,
-}
-
+__pdoc__ = {'base': False, 'build': False, 'unaryop': False, 'binaryop': False, 'monoid': False, 'semiring': False, 'matrix': False, 'vector': False, 'scalar': False, 'types': False, 'run_doctests': False, 'descriptor': True, 'selectop': True}
 build_semirings(__pdoc__)
 build_binaryops(__pdoc__)
 build_unaryops(__pdoc__)
 build_monoids(__pdoc__)
 build_selectops(__pdoc__)
-
-from .types import (
-    BOOL,
-    FP64,
-    FP32,
-    FC64,
-    FC32,
-    INT64,
-    INT32,
-    INT16,
-    INT8,
-    UINT64,
-    UINT32,
-    UINT16,
-    UINT8,
-)
-
-__all__ = [
-    "GxB_INDEX_MAX",
-    "GxB_IMPLEMENTATION",
-    "GxB_SPEC",
-    "Matrix",
-    "Vector",
-    "Scalar",
-    "Accum",
-    "BOOL",
-    "FP64",
-    "FP32",
-    "FC64",
-    "FC32",
-    "INT64",
-    "INT32",
-    "INT16",
-    "INT8",
-    "UINT64",
-    "UINT32",
-    "UINT16",
-    "UINT8",
-    "descriptor",
-    "selectop",
-    "binary_op",
-    "unary_op",
-    "select_op",
-    "options_set",
-    "options_get",
-]
-
+from .types import BOOL, FP64, FP32, FC64, FC32, INT64, INT32, INT16, INT8, UINT64, UINT32, UINT16, UINT8
+__all__ = ['GxB_INDEX_MAX', 'GxB_IMPLEMENTATION', 'GxB_SPEC', 'Matrix', 'Vector', 'Scalar', 'Accum', 'BOOL', 'FP64', 'FP32', 'FC64', 'FC32', 'INT64', 'INT32', 'INT16', 'INT8', 'UINT64', 'UINT32', 'UINT16', 'UINT8', 'descriptor', 'selectop', 'binary_op', 'unary_op', 'select_op', 'options_set', 'options_get']
 GxB_INDEX_MAX = GxB_INDEX_MAX
-"""Maximum key size for SuiteSparse, defaults to `2**60`."""
-
+'Maximum key size for SuiteSparse, defaults to `2**60`.'
 GxB_IMPLEMENTATION = GxB_IMPLEMENTATION
-""" Tuple containing GxB_IMPLEMENTATION (MAJOR, MINOR, SUB) """
-
+' Tuple containing GxB_IMPLEMENTATION (MAJOR, MINOR, SUB) '
 GxB_SPEC = GxB_SPEC
-""" Tuple containing GxB_SPEC (MAJOR, MINOR, SUB) """
-
+' Tuple containing GxB_SPEC (MAJOR, MINOR, SUB) '
 
 def run_doctests(raise_on_error=False):
-    from . import matrix
-    from . import vector
-    from . import descriptor
-    from . import base
-    from . import unaryop
-    from . import binaryop
-    import sys, doctest
-
-    this = sys.modules[__name__]
-    for mod in (
-        this,
-        selectop,
-        unaryop,
-        binaryop,
-        matrix,
-        vector,
-        descriptor,
-        base,
-    ):
-        doctest.testmod(
-            mod, optionflags=doctest.ELLIPSIS, raise_on_error=raise_on_error
-        )
-
-
+    raise NotImplementedError()
 from . import _version
-
-__version__ = _version.get_versions()["version"]
+__version__ = _version.get_versions()['version']
